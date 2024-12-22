@@ -1,26 +1,29 @@
 import { useState } from "react";
-import TextInputForm from "./TextInputForm";
+import TextInputForm from "./TextInputForm"; // Assuming this is a child component for the form layout
+import { useNavigate } from "react-router-dom";
 
 function TextInputFormContainer() {
-  const [inputType, setInputType] = useState("password"); // State for toggling the input type
+  const [inputType, setInputType] = useState("password");
+  const [value, setValue] = useState(""); 
+
+  const navigate = useNavigate();
 
   function handleSubmitForm(event) {
     event.preventDefault();
-    console.log("Form submitted with value");
+    if (value) {
+      console.log("Form submitted with value:", value);
+      navigate('/play', { state: { wordSelected: value } });
+    } else {
+      console.error("No value entered");
+    }
   }
 
   function handleTextInputChange(event) {
-    const value = event.target.value;
-    console.log("Text input changed:", value);
+    setValue(event.target.value);
   }
 
   function handleShowHideClick() {
-    console.log("Show/Hide button clicked");
-    if(inputType === "password"){
-        setInputType("text");
-    }else{
-        setInputType("password");
-    }
+    setInputType((prevType) => (prevType === "password" ? "text" : "password"));
   }
 
   return (
@@ -28,7 +31,7 @@ function TextInputFormContainer() {
       handleSubmitForm={handleSubmitForm}
       handleTextInputChange={handleTextInputChange}
       handleShowHideClick={handleShowHideClick}
-      inputType={inputType} // Pass the input type
+      inputType={inputType}
     />
   );
 }
